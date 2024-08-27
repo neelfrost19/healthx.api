@@ -5,6 +5,7 @@ import roleModel from "../../models/role/roleModel.js";
 class StaffService {
     static async getStaff(staff) {
         const {search, searchType} = staff;
+        console.log(searchType);
         let searchQuery = {};
         switch (searchType) {
             case "email":
@@ -26,6 +27,7 @@ class StaffService {
                 searchQuery={email: search};
                 break;
         }
+        console.log(searchQuery);
         return staffModel.find(searchQuery, undefined, undefined);
     }
 

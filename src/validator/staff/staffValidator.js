@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import {RegexChecker} from "../../utils/regexChecker.js";
 
-const staffSchema = Joi.object({
+const staffPostSchema = Joi.object({
     firstName: Joi.string().pattern(RegexChecker.USERNAME_REGEX).min(3).max(30).required(),
     lastName: Joi.string().pattern(RegexChecker.USERNAME_REGEX).min(3).max(30).required(),
     email: Joi.string().pattern(RegexChecker.EMAIL_REGEX).email().required(),
@@ -12,9 +12,16 @@ const staffSchema = Joi.object({
     phone: Joi.number().required(),
 });
 
+const staffFindSchema = Joi.object({
+});
+
 class StaffValidator {
-    static validate(data) {
-        return staffSchema.validate(data);
+    static postValidate(data) {
+        return staffPostSchema.validate(data);
+    }
+
+    static findValidate(data) {
+        return staffFindSchema.validate(data);
     }
 }
 
