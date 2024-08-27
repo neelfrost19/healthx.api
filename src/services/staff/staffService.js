@@ -1,11 +1,11 @@
 import staffModel from "../../models/staff/staffModel.js";
 import roleModel from "../../models/role/roleModel.js";
+import mongoose from "mongoose";
 
 
 class StaffService {
     static async getStaff(staff) {
         const {search, searchType} = staff;
-        console.log(searchType);
         let searchQuery = {};
         switch (searchType) {
             case "email":
@@ -24,11 +24,21 @@ class StaffService {
                 searchQuery = {gender: search};
                 break;
             default:
-                searchQuery={email: search};
+                searchQuery={};
                 break;
         }
-        console.log(searchQuery);
-        return staffModel.find(searchQuery, undefined, undefined);
+        const staffData = await staffModel.find(searchQuery, undefined, undefined);
+        if (!staffData.length) {
+            return { status: 500, message: 'staff data does not exist' };
+        }
+        let newStaffData =[];
+        for (const staff of staffData) {
+            const {_id, roleId, countryCode, phone, firstName, lastName, gender, department, email} = staff;
+            const roleData = await roleModel.findById(roleId, undefined, undefined);
+            const {roleName} = roleData;
+            newStaffData.push({_id, countryCode, phone, firstName, lastName, gender, department, email, role: roleName});
+        }
+        return newStaffData;
     }
 
     static async createStaff(staff) {
@@ -41,7 +51,7 @@ class StaffService {
 
         rest.roleId = roleId;
 
-        //return staffModel.create(rest, undefined);
+        return staffModel.create(rest, undefined);
     }
     
     static async updateStaff(id, staff) {

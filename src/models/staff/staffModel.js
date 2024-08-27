@@ -20,6 +20,14 @@ const StaffSchema = new Schema(
             type: String,
             required: true,
         },
+        countryCode: {
+            type: Number,
+            required: true,
+        },
+        phone: {
+            type: String,
+            required: true,
+        },
         department: {
             type: String,
             required: true,

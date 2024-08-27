@@ -1,0 +1,14 @@
+name: Deploy
+
+on:
+  repository_dispatch:
+    types: [render-deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: |
+          curl -X POST -d '' ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
