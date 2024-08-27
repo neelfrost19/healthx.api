@@ -3,6 +3,7 @@ import StaffController from "../controllers/staff/staffController.js";
 
 const router = express.Router();
 
-router.route("/staff").get(StaffController.getStaff).post(StaffController.createStaff).put(StaffController.createStaff).delete(StaffController.createStaff);
+router.route("/staff").get(StaffController.getStaff).post(StaffController.createStaff);
+router.route("/staff/:id").put(StaffController.updateStaff).delete(StaffController.deleteStaff);
 
 export default router

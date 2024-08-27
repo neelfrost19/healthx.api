@@ -63,13 +63,12 @@ export async function authenticateRequest(req, res, next) {
             }
         },
     ])
-    console.log(JSON.stringify(userData));
-    console.log('req',req.method);
 
     const method = {
         GET: "readService",
         POST: "createService",
         PATCH: "updateService",
+        PUT: "updateService",
         DELETE: "deleteService",
     }
 

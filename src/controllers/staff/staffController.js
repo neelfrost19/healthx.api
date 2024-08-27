@@ -27,7 +27,7 @@ class StaffController {
 
     static async updateStaff(req, res) {
         try {
-            const staff = await StaffService.updateStaff();
+            const staff = await StaffService.updateStaff(req.params.id, req.body);
             res.json({ data: staff, status: "success" });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -36,7 +36,7 @@ class StaffController {
 
     static async deleteStaff(req, res) {
         try {
-            const staff = await StaffService.deleteStaff();
+            const staff = await StaffService.deleteStaff(req.params.id);
             res.json({ data: staff, status: "success" });
         } catch (err) {
             res.status(500).json({ error: err.message });

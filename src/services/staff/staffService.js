@@ -45,7 +45,16 @@ class StaffService {
     }
     
     static async updateStaff(id, staff) {
-        return staffModel.findByIdAndUpdate(id, staff, undefined);
+        const {role, ...rest} = staff;
+        if(role){
+            const roleData = await roleModel.findOne({roleName: role}, undefined, undefined);
+            if(!roleData){
+                return { status: 500, message: 'role does not exist' };
+            }
+            const {_id: roleId} = roleData;
+            rest.roleId = roleId;
+        }
+        return staffModel.findByIdAndUpdate(id, rest, undefined);
     }
     
     static async deleteStaff(id) {
