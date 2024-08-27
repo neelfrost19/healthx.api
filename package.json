@@ -1,0 +1,26 @@
+{
+  "name": "healthx.api",
+  "version": "1.0.0",
+  "description": "health management system",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "author": "Neelesh",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.5.0",
+    "migrate-mongo": "^11.0.0",
+    "mongoose": "^8.5.2",
+    "nodemon": "^3.1.4",
+    "uuid": "^10.0.0",
+    "winston": "^3.13.1"
+  }
+}
