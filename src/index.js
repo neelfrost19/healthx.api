@@ -9,6 +9,7 @@ import {authenticateRequest} from "./auth/middleware.js";
 
 import userRoute from "./routes/userRoute.js";
 import userLoginRoute from "./routes/userLoginRoute.js";
+import staffRoute from "./routes/staffRoute.js";
 
 config();
 
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 app.use(authenticateRequest);
 app.use(userRoute);
 app.use(userLoginRoute);
+app.use(staffRoute);
 
 app.listen(PORT, () => {
    Logger.info(`Server is running on port ${PORT}`);

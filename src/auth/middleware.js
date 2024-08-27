@@ -21,6 +21,7 @@ export async function authenticateRequest(req, res, next) {
     req.user=decryptedToken;
     const {userId} = decryptedToken;
     const userExist = await UserLoginModel.findOne({userId: userId, activeToken: token}, undefined, undefined);
+    console.log('userExist', userExist);
 
     if(!userExist) return res.status(401).send({statusCode: 401, message: 'unauthorized access'});
     return next();

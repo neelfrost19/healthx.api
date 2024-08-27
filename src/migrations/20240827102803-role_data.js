@@ -47,16 +47,15 @@ export async function up(db, client) {
         },
     ];
     const rolePromises = rolesData.map(async (role) => {
-        const permission = await Permission.find({ name: 'READ_ACCESS' }, undefined, undefined);
-        console.log('permission', permission);
-        if (!permission[0]) {
+        const permission = await db.collection('permissions').findOne({ name: role.permissionName }, undefined, undefined);
+        if (!permission) {
             throw new Error(`Permission with name ${role.permissionName} not found`);
         }
 
         return {
             roleName: role.roleName,
             roleDescription: role.roleDescription,
-            permissionId: permission[0]._id,
+            permissionId: permission._id,
             AuthorityLevel: role.authorityLevel
         };
     });

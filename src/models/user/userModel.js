@@ -16,6 +16,10 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
+        roleId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        },
         __v: {
             type: Number,
             select: false,
