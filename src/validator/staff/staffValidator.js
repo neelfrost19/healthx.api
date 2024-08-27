@@ -6,7 +6,10 @@ const staffSchema = Joi.object({
     lastName: Joi.string().pattern(RegexChecker.USERNAME_REGEX).min(3).max(30).required(),
     email: Joi.string().pattern(RegexChecker.EMAIL_REGEX).email().required(),
     department: Joi.string().required(),
-    roleId: Joi.string().required(),
+    role: Joi.string().required(),
+    gender: Joi.string().required(),
+    countryCode: Joi.number().required(),
+    phone: Joi.number().required(),
 });
 
 class StaffValidator {

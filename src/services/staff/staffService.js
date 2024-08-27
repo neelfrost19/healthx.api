@@ -1,13 +1,45 @@
 import staffModel from "../../models/staff/staffModel.js";
+import roleModel from "../../models/role/roleModel.js";
 
 
 class StaffService {
-    static async getStaff(id) {
-        return staffModel.findById(id, undefined, undefined);
+    static async getStaff(staff) {
+        const {search, searchType} = staff;
+        let searchQuery = {};
+        switch (searchType) {
+            case "email":
+                searchQuery = {email: search};
+                break;
+            case "firstName":
+                searchQuery = {firstName: search};
+                break;
+            case "lastName":
+                searchQuery = {lastName: search};
+                break;
+            case "department":
+                searchQuery = {department: search};
+                break;
+            case "gender":
+                searchQuery = {gender: search};
+                break;
+            default:
+                searchQuery={email: search};
+                break;
+        }
+        return staffModel.find(searchQuery, undefined, undefined);
     }
 
     static async createStaff(staff) {
-        return staffModel.create(staff, undefined);
+        const {role, ...rest} = staff;
+        const roleData = await roleModel.findOne({roleName: role}, undefined, undefined);
+        if(!roleData){
+            return { status: 500, message: 'role does not exist' };
+        }
+        const {_id: roleId} = roleData;
+
+        rest.roleId = roleId;
+
+        //return staffModel.create(rest, undefined);
     }
     
     static async updateStaff(id, staff) {

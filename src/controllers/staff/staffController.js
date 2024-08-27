@@ -4,7 +4,7 @@ import StaffValidator from "../../validator/staff/staffValidator.js";
 class StaffController {
     static async getStaff(req, res) {
         try {
-            const staff = await StaffService.getUser();
+            const staff = await StaffService.getStaff(req.body);
             res.json({ data: staff, status: "success" });
         } catch (err) {
             res.status(500).json({ error: err.message });

@@ -2,6 +2,8 @@ import {SECRET_KEY} from "../envs/index.js";
 import {Token} from "./token.js";
 import {authRouteList} from "./authRouteList.js";
 import UserLoginModel from "../models/user/userLoginModel.js";
+import userModel from "../models/user/userModel.js";
+import mongoose from "mongoose";
 
 export async function authenticateRequest(req, res, next) {
     const {originalUrl, headers} = req;
@@ -21,7 +23,59 @@ export async function authenticateRequest(req, res, next) {
     req.user=decryptedToken;
     const {userId} = decryptedToken;
     const userExist = await UserLoginModel.findOne({userId: userId, activeToken: token}, undefined, undefined);
-    console.log('userExist', userExist);
+    //const userData = await UserModel.findOne({_id: userId}, undefined, undefined);
+    const userData = await userModel.aggregate([
+        {
+            $match: {_id: new mongoose.Types.ObjectId(userId)}
+        },
+        {
+            $lookup: {
+                from: 'roles',
+                let: {roleId: '$roleId',},
+                pipeline: [
+                    {
+                        $match: {
+                            $expr:
+                                {
+                                    $eq: ['$_id', '$$roleId'],
+                                },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'permissions',
+                            let: {permissionId: '$permissionId',},
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr:
+                                            {
+                                                $eq: ['$_id', '$$permissionId'],
+                                            },
+                                    },
+                                },
+                            ],
+                            as: 'permission',
+                        }
+                    },
+                ],
+                as: 'role'
+            }
+        },
+    ])
+    console.log(JSON.stringify(userData));
+    console.log('req',req.method);
+
+    const method = {
+        GET: "readService",
+        POST: "createService",
+        PATCH: "updateService",
+        DELETE: "deleteService",
+    }
+
+    if(!method[req.method]) {
+        return res.status(401).send({statusCode: 401, message: 'service not allowed'});
+    }
 
     if(!userExist) return res.status(401).send({statusCode: 401, message: 'unauthorized access'});
     return next();

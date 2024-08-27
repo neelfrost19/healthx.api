@@ -4,11 +4,12 @@ import { RegexChecker } from "../../utils/regexChecker.js";
 import UserModel from "../../models/user/userModel.js";
 import {Token} from "../../auth/token.js";
 import UserLoginModel from "../../models/user/userLoginModel.js";
+import roleModel from "../../models/role/roleModel.js";
 
 
 class UserService {
     static async getUser(id) {
-        return 'something';
+        return UserModel.findById(id, undefined, undefined);
     }
 
     static async createUser(user) {
@@ -16,8 +17,18 @@ class UserService {
         user.password = Encryption.encrypt(password);
         const existingUser = await UserModel.findOne({email}, undefined, undefined);
         if (existingUser) {
-            return { status: 200, message: 'User already exists' };
+            return { status: 500, message: 'User already exists' };
         }
+        const roleData = await roleModel.findOne({roleName: "Admin"}, undefined, undefined);
+
+        if(!roleData){
+            return { status: 500, message: 'Admin role does not exist' };
+        }
+
+        const {_id: roleId} = roleData;
+
+        user.roleId = roleId;
+
         const userData = await UserModel.create(user, undefined);
         const { _id, userName } = userData;
 
