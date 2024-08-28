@@ -15,10 +15,12 @@ class StaffController {
 
             const staff = await StaffService.getStaff(req.query);
 
-            await ActivityLogService.createLog({
-                actionTaker: userName,
-                action: 'StaffRead'
-            })
+            if(staff.status === 200) {
+                await ActivityLogService.createLog({
+                    actionTaker: userName,
+                    action: 'StaffRead'
+                })
+            }
 
             res.json({ data: staff, status: "success" });
         } catch (err) {
@@ -40,11 +42,13 @@ class StaffController {
 
             const {firstName, lastName} = req.body;
 
-            await ActivityLogService.createLog({
-                actionTaker: userName,
-                action: 'StaffCreate',
-                actionTakenOn: `${firstName} ${lastName}`,
-            })
+            if(staff.status===200){
+                await ActivityLogService.createLog({
+                    actionTaker: userName,
+                    action: 'StaffCreate',
+                    actionTakenOn: `${firstName} ${lastName}`,
+                })
+            }
 
             res.json({ data: staff, status: "success" });
         } catch (err) {
@@ -56,15 +60,17 @@ class StaffController {
         try {
             const {userName} = req.fullUserData;
 
-            const staff = await StaffService.updateStaff(req.params.id, req.body);
+            const staff = await StaffService.updateStaff(req.params.id, req.body, req.fullUserData);
 
             const {firstName, lastName} = req.body;
 
-            await ActivityLogService.createLog({
-                actionTaker: userName,
-                action: 'StaffUpdate',
-                actionTakenOn: `${firstName} ${lastName}`,
-            })
+            if(staff.status === 200) {
+                await ActivityLogService.createLog({
+                    actionTaker: userName,
+                    action: 'StaffUpdate',
+                    actionTakenOn: `${firstName} ${lastName}`,
+                })
+            }
 
             res.json({ data: staff, status: "success" });
 
@@ -77,15 +83,16 @@ class StaffController {
         try {
             const {userName} = req.fullUserData;
 
-            const staff = await StaffService.deleteStaff(req.params.id);
+            const staff = await StaffService.deleteStaff(req.params.id, req.fullUserData);
             const {firstName, lastName} = staff;
 
-            await ActivityLogService.createLog({
-                actionTaker: userName,
-                action: 'StaffDelete',
-                actionTakenOn: `${firstName} ${lastName}`,
-            })
-
+            if(staff.status === 200) {
+                await ActivityLogService.createLog({
+                    actionTaker: userName,
+                    action: 'StaffDelete',
+                    actionTakenOn: `${firstName} ${lastName}`,
+                })
+            }
             res.json({ data: staff, status: "success" });
         } catch (err) {
             res.status(500).json({ error: err.message });

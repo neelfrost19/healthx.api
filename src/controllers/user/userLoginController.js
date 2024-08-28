@@ -11,10 +11,10 @@ class UserLoginController {
             }
             const user = await UserLoginService.getUserLogin(req.body);
             const {userName} = user;
-            await ActivityLogService.createLog({
-                actionTaker: userName,
-                action: 'LoggedIn'
-            })
+            // await ActivityLogService.createLog({
+            //     actionTaker: userName,
+            //     action: 'LoggedIn'
+            // })
             res.json({ data: user, status: "success" });
         } catch (err) {
             res.status(500).json({ error: err.message });
