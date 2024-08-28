@@ -8,12 +8,15 @@ const staffPostSchema = Joi.object({
     department: Joi.string().required(),
     role: Joi.string().required(),
     gender: Joi.string().required(),
-    countryCode: Joi.number().required(),
-    phone: Joi.number().required(),
+    countryCode: Joi.string().required(),
+    phone: Joi.string().required(),
 });
 
 const staffFindSchema = Joi.object({
-});
+    search: Joi.string().optional(),
+    searchType: Joi.string().optional(),
+}).xor('search', 'searchType');
+
 
 class StaffValidator {
     static postValidate(data) {

@@ -21,7 +21,7 @@ const StaffSchema = new Schema(
             required: true,
         },
         countryCode: {
-            type: Number,
+            type: String,
             required: true,
         },
         phone: {
