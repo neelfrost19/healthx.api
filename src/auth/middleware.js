@@ -7,7 +7,10 @@ import mongoose from "mongoose";
 
 export async function authenticateRequest(req, res, next) {
     const {originalUrl, headers} = req;
-    if (!authRouteList[originalUrl]) {
+    console.log(originalUrl.split('/')[1]);
+    const modifiedUrl = `/${originalUrl.split('/')[1]}`;
+    console.log(authRouteList[modifiedUrl]);
+    if (!authRouteList[modifiedUrl]) {
         return next();
     }
     const authHeader = headers['authorization'];
@@ -23,7 +26,7 @@ export async function authenticateRequest(req, res, next) {
     req.user=decryptedToken;
     const {userId} = decryptedToken;
     const userExist = await UserLoginModel.findOne({userId: userId, activeToken: token}, undefined, undefined);
-    //const userData = await UserModel.findOne({_id: userId}, undefined, undefined);
+
     const userData = await userModel.aggregate([
         {
             $match: {_id: new mongoose.Types.ObjectId(userId)}
@@ -64,6 +67,9 @@ export async function authenticateRequest(req, res, next) {
         },
     ])
 
+    const userPermissionData = userData[0].role[0].permission[0];
+    req.fullUserData=userData[0];
+
     const method = {
         GET: "readService",
         POST: "createService",
@@ -72,7 +78,7 @@ export async function authenticateRequest(req, res, next) {
         DELETE: "deleteService",
     }
 
-    if(!method[req.method]) {
+    if(!userPermissionData[method[req.method]]) {
         return res.status(401).send({statusCode: 401, message: 'service not allowed'});
     }
 

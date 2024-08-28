@@ -38,11 +38,11 @@ class UserAuthService {
         if (existingToken) {
             const { _id: existingTokenId } = existingToken;
             await UserLoginModel.findByIdAndUpdate({ _id: existingTokenId }, { activeToken: token }, undefined);
-            return { token };
+            return { token, userName };
         }
 
         await UserLoginModel.create(userLoginPayload, undefined);
-        return { token };
+        return { token, userName };
     }
 }
 
