@@ -7,9 +7,9 @@ import mongoose from "mongoose";
 
 export async function authenticateRequest(req, res, next) {
     const {originalUrl, headers} = req;
-    console.log(originalUrl.split('/')[1]);
+
     const modifiedUrl = `/${originalUrl.split('/')[1]}`;
-    console.log(authRouteList[modifiedUrl]);
+
     if (!authRouteList[modifiedUrl]) {
         return next();
     }

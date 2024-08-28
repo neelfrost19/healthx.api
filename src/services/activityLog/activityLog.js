@@ -5,7 +5,6 @@ import ActivityLog from "../../models/activityLog/activityLog.js";
 class ActivityLogService {
 
     static async createLog(data) {
-        console.log(data);
         const {actionTaker, action, actionTakenOn='' } = data;
         const log = data;
         const logPayload = {
