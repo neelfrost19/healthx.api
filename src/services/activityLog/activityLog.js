@@ -1,8 +1,12 @@
 import {DateTime} from "luxon";
-import ActivityLog from "../../models/activityLog/activityLog.js";
+import ActivityLogModel from "../../models/activityLog/activityLog.js";
 
 
 class ActivityLogService {
+
+    static async getActivity() {
+        return ActivityLogModel.find({}, undefined, undefined);
+    }
 
     static async createLog(data) {
         const {actionTaker, action, actionTakenOn='' } = data;
@@ -16,7 +20,7 @@ class ActivityLogService {
         this.setLogMessage(logPayload);
         log.time = DateTime.now().toMillis();
 
-        await ActivityLog.create(log, undefined);
+        await ActivityLogModel.create(log, undefined);
         return data;
     }
 
